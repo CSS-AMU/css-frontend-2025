@@ -37,6 +37,7 @@ const App = () => (
             <Route path="/notices" element={<Notices />} />
             <Route path="/settings" element={<AccountSettings />} />
           </Routes>
+          
         </div>
       </BrowserRouter>
     </TooltipProvider>

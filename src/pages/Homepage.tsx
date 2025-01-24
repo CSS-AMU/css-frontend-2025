@@ -2,12 +2,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Calendar, Users, Briefcase, BookOpen, Code } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import LeetcodeDashboard from "./LeetcodeDashboard";
+import Logo from "@/images/a.png"
 
 const Index = () => {
   const teamMembers = {
     "Development Team": [
       { name: "John Smith", role: "Lead Developer", expertise: "Full Stack" },
       { name: "Sarah Johnson", role: "Frontend Developer", expertise: "React/TypeScript" },
+      { name: "Mike Chen", role: "Backend Developer", expertise: "Node.js/Python" },
+      { name: "Mike Chen", role: "Backend Developer", expertise: "Node.js/Python" },
+      { name: "Mike Chen", role: "Backend Developer", expertise: "Node.js/Python" },
+      { name: "Mike Chen", role: "Backend Developer", expertise: "Node.js/Python" },
+      { name: "Mike Chen", role: "Backend Developer", expertise: "Node.js/Python" },
+      { name: "Mike Chen", role: "Backend Developer", expertise: "Node.js/Python" },
+      { name: "Mike Chen", role: "Backend Developer", expertise: "Node.js/Python" },
       { name: "Mike Chen", role: "Backend Developer", expertise: "Node.js/Python" },
       { name: "Emma Davis", role: "Mobile Developer", expertise: "React Native" }
     ],
@@ -20,6 +28,10 @@ const Index = () => {
       { name: "Maria Garcia", role: "UI/UX Lead", expertise: "User Research" },
       { name: "David Kim", role: "Product Designer", expertise: "Interface Design" }
     ],
+    "Design ": [
+      { name: "Maria Garcia", role: "UI/UX Lead", expertise: "User Research" },
+      { name: "David Kim", role: "Product Designer", expertise: "Interface Design" }
+    ],
     "Research Team": [
       { name: "Dr. Rachel Brown", role: "Research Lead", expertise: "Algorithms" },
       { name: "Tom Anderson", role: "Research Engineer", expertise: "Distributed Systems" }
@@ -27,7 +39,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen pt-20 pb-20 md:pb-0 px-4">
+    <div className="min-h-screen pt-20 pb-20 md:pb-0 px-4 flex justify-center items-center   ">
       <div className="max-w-7xl mx-auto space-y-12">
         {/* Hero Section */}
         <section className="text-center mb-16">
@@ -37,11 +49,21 @@ const Index = () => {
             Together, we learn, create, and grow.
           </p>
         </section>
+       
+
 
         {/* Add Community/Leaderboard section */}
-        <section className="mb-8">
-          <LeetcodeDashboard />
-        </section>
+        <div className="flex flex-col md:flex-row gap-8 justify-center items-center">
+          <div className="flex flex-col items-center justify-center order-1 md:order-1 w-full md:w-1/2 md:h-[500px]">
+            <img src={Logo} className="h-96 w-96" alt="Logo" />
+          </div>
+          
+          <section className="w-full md:w-1/2 jus order-1 md:order-2">
+            <div className="h-[500px] overflow-y-auto">
+              <LeetcodeDashboard />
+            </div>
+          </section>
+        </div>
 
         {/* Upcoming Events */}
         <section>
@@ -53,32 +75,50 @@ const Index = () => {
               </div>
               <CardDescription>Join our latest workshops and meetups</CardDescription>
             </CardHeader>
-            <CardContent className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[
-                {
-                  title: "Web Development Workshop",
-                  date: "March 15, 2024",
-                  description: "Learn modern web development with React"
-                },
-                {
-                  title: "Hackathon 2024",
-                  date: "April 1-2, 2024",
-                  description: "48-hour coding challenge"
-                },
-                {
-                  title: "Tech Talk Series",
-                  date: "March 20, 2024",
-                  description: "Industry experts share their experiences"
-                }
-              ].map((event, index) => (
-                <Card key={index}>
-                  <CardContent className="pt-6">
-                    <h3 className="font-semibold mb-2 text-foreground">{event.title}</h3>
-                    <p className="text-sm text-muted-foreground mb-1">{event.date}</p>
-                    <p className="text-sm text-foreground">{event.description}</p>
-                  </CardContent>
-                </Card>
-              ))}
+            <CardContent className="overflow-x-auto md:overflow-x-auto">
+              <div className="flex flex-col md:flex-row gap-4 md:min-w-max">
+                {[
+                  {
+                    title: "Web Development Workshop",
+                    date: "March 15, 2024",
+                    description: "Learn modern web development with React"
+                  },
+                  {
+                    title: "Web Development Workshop",
+                    date: "March 15, 2024",
+                    description: "Learn modern web development with React"
+                  },
+                  {
+                    title: "Web Development Workshop",
+                    date: "March 15, 2024",
+                    description: "Learn modern web development with React"
+                  },
+                  {
+                    title: "Web Development Workshop",
+                    date: "March 15, 2024",
+                    description: "Learn modern web development with React"
+                  },
+                  {
+                    title: "Web Development Workshop",
+                    date: "March 15, 2024",
+                    description: "Learn modern web development with React"
+                  },
+             
+                  {
+                    title: "Tech Talk Series",
+                    date: "March 20, 2024",
+                    description: "Industry experts share their experiences"
+                  }
+                ].map((event, index) => (
+                  <Card key={index} className="w-full md:w-[300px] md:flex-shrink-0">
+                    <CardContent className="pt-6">
+                      <h3 className="font-semibold mb-2 text-foreground">{event.title}</h3>
+                      <p className="text-sm text-muted-foreground mb-1">{event.date}</p>
+                      <p className="text-sm text-foreground">{event.description}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </section>
@@ -93,34 +133,36 @@ const Index = () => {
               </div>
               <CardDescription>Meet our dedicated teams working on various domains</CardDescription>
             </CardHeader>
-            <CardContent className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {Object.entries(teamMembers).map(([teamName, members], index) => (
-                <Dialog key={index}>
-                  <DialogTrigger asChild>
-                    <Card className="cursor-pointer hover:bg-accent transition-colors">
-                      <CardContent className="pt-6">
-                        <h3 className="font-semibold mb-2 text-foreground">{teamName}</h3>
-                        <p className="text-sm text-muted-foreground mb-1">{members.length} Members</p>
-                        <p className="text-sm text-foreground">Click to view team</p>
-                      </CardContent>
-                    </Card>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px]">
-                    <DialogHeader>
-                      <DialogTitle className="text-foreground">{teamName}</DialogTitle>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                      {members.map((member, memberIndex) => (
-                        <div key={memberIndex} className="p-4 rounded-lg bg-accent">
-                          <h4 className="font-semibold text-foreground">{member.name}</h4>
-                          <p className="text-sm text-muted-foreground">{member.role}</p>
-                          <p className="text-sm text-muted-foreground">{member.expertise}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              ))}
+            <CardContent className="overflow-x-auto md:overflow-x-auto">
+              <div className="flex flex-col md:flex-row gap-4 md:min-w-max">
+                {Object.entries(teamMembers).map(([teamName, members], index) => (
+                  <Dialog key={index}>
+                    <DialogTrigger asChild>
+                      <Card className="cursor-pointer hover:bg-accent transition-colors w-full md:w-[300px] md:flex-shrink-0">
+                        <CardContent className="pt-6">
+                          <h3 className="font-semibold mb-2 text-foreground">{teamName}</h3>
+                          <p className="text-sm text-muted-foreground mb-1">{members.length} Members</p>
+                          <p className="text-sm text-foreground">Click to view team</p>
+                        </CardContent>
+                      </Card>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                      <DialogHeader>
+                        <DialogTitle className="text-foreground">{teamName}</DialogTitle>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        {members.map((member, memberIndex) => (
+                          <div key={memberIndex} className="p-4 rounded-lg bg-accent">
+                            <h4 className="font-semibold text-foreground">{member.name}</h4>
+                            <p className="text-sm text-muted-foreground">{member.role}</p>
+                            <p className="text-sm text-muted-foreground">{member.expertise}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </section>
@@ -166,32 +208,50 @@ const Index = () => {
               </div>
               <CardDescription>Technical insights and experiences shared by our members</CardDescription>
             </CardHeader>
-            <CardContent className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[
-                {
-                  title: "Getting Started with React",
-                  author: "John Doe",
-                  date: "March 1, 2024"
-                },
-                {
-                  title: "Machine Learning Basics",
-                  author: "Jane Smith",
-                  date: "February 28, 2024"
-                },
-                {
-                  title: "UI Design Principles",
-                  author: "Mike Johnson",
-                  date: "February 25, 2024"
-                }
-              ].map((blog, index) => (
-                <Card key={index}>
-                  <CardContent className="pt-6">
-                    <h3 className="font-semibold mb-2 text-foreground">{blog.title}</h3>
-                    <p className="text-sm text-muted-foreground mb-1">By {blog.author}</p>
-                    <p className="text-sm text-muted-foreground">{blog.date}</p>
-                  </CardContent>
-                </Card>
-              ))}
+            <CardContent className="overflow-x-auto md:overflow-x-auto">
+              <div className="flex flex-col md:flex-row gap-4 md:min-w-max">
+                {[
+                  {
+                    title: "Getting Started with React",
+                    author: "John Doe",
+                    date: "March 10, 2024",
+                    description: "A beginner's guide to React development"
+                  },
+                  {
+                    title: "Machine Learning Basics",
+                    author: "Jane Smith",
+                    date: "February 28, 2024"
+                  },
+                  {
+                    title: "Machine Learning Basics",
+                    author: "Jane Smith",
+                    date: "February 28, 2024"
+                  },
+                  {
+                    title: "Machine Learning Basics",
+                    author: "Jane Smith",
+                    date: "February 28, 2024"
+                  },
+                  {
+                    title: "Machine Learning Basics",
+                    author: "Jane Smith",
+                    date: "February 28, 2024"
+                  },
+                  {
+                    title: "UI Design Principles",
+                    author: "Mike Johnson",
+                    date: "February 25, 2024"
+                  }
+                ].map((blog, index) => (
+                  <Card key={index} className="w-full md:w-[300px] md:flex-shrink-0">
+                    <CardContent className="pt-6">
+                      <h3 className="font-semibold mb-2 text-foreground">{blog.title}</h3>
+                      <p className="text-sm text-muted-foreground mb-1">By {blog.author}</p>
+                      <p className="text-sm text-muted-foreground">{blog.date}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </section>
@@ -206,32 +266,39 @@ const Index = () => {
               </div>
               <CardDescription>Innovative projects developed by our teams</CardDescription>
             </CardHeader>
-            <CardContent className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[
-                {
-                  title: "Smart Campus App",
-                  tech: "React Native, Node.js",
-                  status: "In Development"
-                },
-                {
-                  title: "AI Study Assistant",
-                  tech: "Python, TensorFlow",
-                  status: "Completed"
-                },
-                {
-                  title: "Virtual Lab Platform",
-                  tech: "React, Django",
-                  status: "Beta Testing"
-                }
-              ].map((project, index) => (
-                <Card key={index}>
-                  <CardContent className="pt-6">
-                    <h3 className="font-semibold mb-2 text-foreground">{project.title}</h3>
-                    <p className="text-sm text-muted-foreground mb-1">{project.tech}</p>
-                    <p className="text-sm text-foreground">{project.status}</p>
-                  </CardContent>
-                </Card>
-              ))}
+            <CardContent className="overflow-x-auto md:overflow-x-auto">
+              <div className="flex flex-col md:flex-row gap-4 md:min-w-max">
+                {[
+                  {
+                    title: "E-commerce Platform",
+                    tech: "Next.js, TypeScript",
+                    description: "A modern e-commerce solution"
+                  },
+                  {
+                    title: "Smart Campus App",
+                    tech: "React Native, Node.js",
+                    status: "In Development"
+                  },
+                  {
+                    title: "AI Study Assistant",
+                    tech: "Python, TensorFlow",
+                    status: "Completed"
+                  },
+                  {
+                    title: "Virtual Lab Platform",
+                    tech: "React, Django",
+                    status: "Beta Testing"
+                  }
+                ].map((project, index) => (
+                  <Card key={index} className="w-full md:w-[300px] md:flex-shrink-0">
+                    <CardContent className="pt-6">
+                      <h3 className="font-semibold mb-2 text-foreground">{project.title}</h3>
+                      <p className="text-sm text-muted-foreground mb-1">{project.tech}</p>
+                      <p className="text-sm text-foreground">{project.status}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </section>
