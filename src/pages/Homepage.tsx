@@ -1,30 +1,28 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, Users, Briefcase, BookOpen, Code } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import LeetcodeDashboard from "./LeetcodeDashboard";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css/pagination';
+
+import 'swiper/css';
+
+import { Pagination } from 'swiper/modules';
 
 const Index = () => {
-  const teamMembers = {
-    "Development Team": [
-      { name: "John Smith", role: "Lead Developer", expertise: "Full Stack" },
-      { name: "Sarah Johnson", role: "Frontend Developer", expertise: "React/TypeScript" },
-      { name: "Mike Chen", role: "Backend Developer", expertise: "Node.js/Python" },
-      { name: "Emma Davis", role: "Mobile Developer", expertise: "React Native" }
-    ],
-    "AI/ML Team": [
-      { name: "Dr. Alex Kumar", role: "ML Lead", expertise: "Deep Learning" },
-      { name: "Lisa Wang", role: "Data Scientist", expertise: "NLP" },
-      { name: "James Wilson", role: "AI Engineer", expertise: "Computer Vision" }
-    ],
-    "Design Team": [
-      { name: "Maria Garcia", role: "UI/UX Lead", expertise: "User Research" },
-      { name: "David Kim", role: "Product Designer", expertise: "Interface Design" }
-    ],
-    "Research Team": [
-      { name: "Dr. Rachel Brown", role: "Research Lead", expertise: "Algorithms" },
-      { name: "Tom Anderson", role: "Research Engineer", expertise: "Distributed Systems" }
-    ]
-  };
+  const teams = [
+    {
+      name:"Development Team",size:3},{
+      name:"AI/ML Team",size:2
+    },
+    {
+      name:"Desing Team",
+      size:4
+    },
+    {
+      name:"Research Team",size:6
+    }
+  ]
 
   return (
     <div className="min-h-screen pt-20 pb-20 md:pb-0 px-4">
@@ -37,51 +35,81 @@ const Index = () => {
             Together, we learn, create, and grow.
           </p>
         </section>
-
-        {/* Add Community/Leaderboard section */}
-        <section className="mb-8">
-          <LeetcodeDashboard />
-        </section>
-
         {/* Upcoming Events */}
-        <section>
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <Calendar className="h-6 w-6 text-primary" />
-                <CardTitle>Upcoming Events</CardTitle>
-              </div>
-              <CardDescription>Join our latest workshops and meetups</CardDescription>
-            </CardHeader>
-            <CardContent className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[
-                {
-                  title: "Web Development Workshop",
-                  date: "March 15, 2024",
-                  description: "Learn modern web development with React"
-                },
-                {
-                  title: "Hackathon 2024",
-                  date: "April 1-2, 2024",
-                  description: "48-hour coding challenge"
-                },
-                {
-                  title: "Tech Talk Series",
-                  date: "March 20, 2024",
-                  description: "Industry experts share their experiences"
-                }
-              ].map((event, index) => (
+      <section>
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Calendar className="h-6 w-6 text-primary" />
+              <CardTitle>Upcoming Events</CardTitle>
+            </div>
+            <CardDescription>Join our latest workshops and meetups</CardDescription>
+          </CardHeader>
+          <CardContent className="">
+          <Swiper
+          spaceBetween={50}
+          slidesPerView={1}
+          loop={true}
+          pagination={true}
+          navigation={true}
+          autoplay={{
+            delay: 2000,
+            disableOnInteraction: false,
+          }}
+          modules={[Pagination]}
+          onSlideChange={() => console.log('slide change')}
+          onSwiper={(swiper) => console.log(swiper)}
+          breakpoints={{
+            576: {
+              width: 576,
+              slidesPerView: 1,
+            },
+            768: {
+              width: 768,
+              slidesPerView: 2,
+            },
+              1024: {
+                slidesPerView: 3,
+              }
+          }}
+        >
+          {
+            [
+              {
+                title: "Web Development Workshop",
+                date: "March 15, 2024",
+                description: "Learn modern web development with React"
+              },
+              {
+                title: "Hackathon 2024",
+                date: "April 1-2, 2024",
+                description: "48-hour coding challenge"
+              },
+              {
+                title: "Tech Talk Series",
+                date: "March 20, 2024",
+                description: "Industry experts share their experiences"
+              }
+
+            ].map((event,index)=>(
+              <SwiperSlide>
                 <Card key={index}>
                   <CardContent className="pt-6">
-                    <h3 className="font-semibold mb-2 text-foreground">{event.title}</h3>
-                    <p className="text-sm text-muted-foreground mb-1">{event.date}</p>
+                    <h3 className="font-semibold mb-2 text-foreground ">{event.title}</h3>
+                    <p className="text-sm text-muted-foreground">{event.date}</p>
                     <p className="text-sm text-foreground">{event.description}</p>
                   </CardContent>
                 </Card>
-              ))}
-            </CardContent>
-          </Card>
-        </section>
+              </SwiperSlide>
+
+            ))
+          }
+        </Swiper>
+        </CardContent>
+        </Card>
+      </section>
+
+        
 
         {/* Our Teams */}
         <section>
@@ -89,38 +117,52 @@ const Index = () => {
             <CardHeader>
               <div className="flex items-center gap-2">
                 <Users className="h-6 w-6 text-primary" />
-                <CardTitle>Our Teams</CardTitle>
+                <CardTitle >Our Teams</CardTitle>
               </div>
               <CardDescription>Meet our dedicated teams working on various domains</CardDescription>
             </CardHeader>
-            <CardContent className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {Object.entries(teamMembers).map(([teamName, members], index) => (
-                <Dialog key={index}>
-                  <DialogTrigger asChild>
+            <CardContent className="">
+            <Swiper
+          spaceBetween={50}
+          slidesPerView={1}
+          loop={true}
+          pagination={true}
+          navigation={true}
+          autoplay={{
+            delay: 2000,
+            disableOnInteraction: false,
+          }}
+          onSlideChange={() => console.log('slide change')}
+          onSwiper={(swiper) => console.log(swiper)}
+          modules={[Pagination]}
+          breakpoints={{
+            576: {
+              width: 576,
+              slidesPerView: 1,
+            },
+            768: {
+              width: 768,
+              slidesPerView: 2,
+            },
+              1024: {
+                slidesPerView: 3,
+              }
+          }}
+        >
+          {
+            teams.map((team,index)=>(
+                  <SwiperSlide className="pb-10">
                     <Card className="cursor-pointer hover:bg-accent transition-colors">
-                      <CardContent className="pt-6">
-                        <h3 className="font-semibold mb-2 text-foreground">{teamName}</h3>
-                        <p className="text-sm text-muted-foreground mb-1">{members.length} Members</p>
+                      <CardContent className="pt-6" key={index}>
+                        <h3 className="font-semibold mb-2 text-foreground">{team.name}</h3>
+                        <p className="text-sm text-muted-foreground mb-1">{team.size} Members</p>
                         <p className="text-sm text-foreground">Click to view team</p>
                       </CardContent>
                     </Card>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px]">
-                    <DialogHeader>
-                      <DialogTitle className="text-foreground">{teamName}</DialogTitle>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                      {members.map((member, memberIndex) => (
-                        <div key={memberIndex} className="p-4 rounded-lg bg-accent">
-                          <h4 className="font-semibold text-foreground">{member.name}</h4>
-                          <p className="text-sm text-muted-foreground">{member.role}</p>
-                          <p className="text-sm text-muted-foreground">{member.expertise}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              ))}
+                    </SwiperSlide>
+            ))
+          }
+                    </Swiper>
             </CardContent>
           </Card>
         </section>
@@ -166,6 +208,33 @@ const Index = () => {
               </div>
               <CardDescription>Technical insights and experiences shared by our members</CardDescription>
             </CardHeader>
+            <Swiper
+          spaceBetween={50}
+          slidesPerView={1}
+          loop={true}
+          pagination={true}
+          navigation={true}
+          autoplay={{
+            delay: 2000,
+            disableOnInteraction: false,
+          }}
+          onSlideChange={() => console.log('slide change')}
+          onSwiper={(swiper) => console.log(swiper)}
+          modules={[Pagination]}
+          breakpoints={{
+            576: {
+              width: 576,
+              slidesPerView: 1,
+            },
+            768: {
+              width: 768,
+              slidesPerView: 2,
+            },
+              1024: {
+                slidesPerView: 3,
+              }
+          }}
+        >
             <CardContent className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {[
                 {
@@ -184,6 +253,7 @@ const Index = () => {
                   date: "February 25, 2024"
                 }
               ].map((blog, index) => (
+                <SwiperSlide>
                 <Card key={index}>
                   <CardContent className="pt-6">
                     <h3 className="font-semibold mb-2 text-foreground">{blog.title}</h3>
@@ -191,8 +261,10 @@ const Index = () => {
                     <p className="text-sm text-muted-foreground">{blog.date}</p>
                   </CardContent>
                 </Card>
+                </SwiperSlide>
               ))}
             </CardContent>
+            </Swiper>
           </Card>
         </section>
 
@@ -206,7 +278,34 @@ const Index = () => {
               </div>
               <CardDescription>Innovative projects developed by our teams</CardDescription>
             </CardHeader>
-            <CardContent className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <CardContent className="">
+            <Swiper
+          spaceBetween={50}
+          slidesPerView={1}
+          loop={true}
+          pagination={true}
+          navigation={true}
+          autoplay={{
+            delay: 2000,
+            disableOnInteraction: false,
+          }}
+          onSlideChange={() => console.log('slide change')}
+          onSwiper={(swiper) => console.log(swiper)}
+          modules={[Pagination]}
+          breakpoints={{
+            576: {
+              width: 576,
+              slidesPerView: 1,
+            },
+            768: {
+              width: 768,
+              slidesPerView: 2,
+            },
+              1024: {
+                slidesPerView: 3,
+              }
+          }}
+        >
               {[
                 {
                   title: "Smart Campus App",
@@ -224,6 +323,7 @@ const Index = () => {
                   status: "Beta Testing"
                 }
               ].map((project, index) => (
+                <SwiperSlide>
                 <Card key={index}>
                   <CardContent className="pt-6">
                     <h3 className="font-semibold mb-2 text-foreground">{project.title}</h3>
@@ -231,7 +331,9 @@ const Index = () => {
                     <p className="text-sm text-foreground">{project.status}</p>
                   </CardContent>
                 </Card>
+                </SwiperSlide>
               ))}
+              </Swiper>
             </CardContent>
           </Card>
         </section>
