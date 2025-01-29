@@ -3,6 +3,7 @@ import { Label } from "@/components/ui/label"
 import { Card } from "@/components/ui/card"
 import { Bell, Mail, Globe, Users, Moon } from "lucide-react"
 import { ModeToggle } from "@/components/mode-toggle"
+import StudentPortfolioForm from "@/components/StudentPortfolioForm"
 
 const AccountSettings = () => {
   return (
@@ -64,6 +65,7 @@ const AccountSettings = () => {
           </div>
         </Card>
       </div>
+      <StudentPortfolioForm/>
     </div>
   )
 }
