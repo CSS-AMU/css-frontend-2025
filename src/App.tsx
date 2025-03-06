@@ -14,6 +14,8 @@ import Classroom from "./pages/Classroom";
 import Chat from "./pages/Chat";
 import ChatRoom from "./pages/ChatRoom";
 import ChatWelcome from "./pages/ChatWelcome";
+import LoginPage from "./pages/LoginPage";
+import RegistrationPage from "./pages/RegisterationPage";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -36,6 +38,8 @@ const App = () => (
             <Route path="/classroom" element={<Classroom />} />
             <Route path="/notices" element={<Notices />} />
             <Route path="/settings" element={<AccountSettings />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegistrationPage />} />
           </Routes>
         </div>
       </BrowserRouter>
