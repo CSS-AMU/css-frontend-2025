@@ -36,7 +36,11 @@ import { ImageIcon } from 'lucide-react';
 const FluencyEnum = z.enum(['Beginner', 'Intermediate', 'Advanced', 'Expert']);
 
 // Enum for course
-const CourseEnum = z.enum(['B.Sc.(Hons.) Comp. Appls.', 'MCA', 'M.Sc. Cyber Security']);
+const CourseEnum = z.enum([
+  'B.Sc.(Hons.) Comp. Appls.',
+  'MCA',
+  'M.Sc. Cyber Security',
+]);
 
 // Course Schema
 const courseSchema = CourseEnum;
@@ -70,12 +74,12 @@ const projectSchema = z.object({
 
 // Achievement Schema
 const achievementSchema = z.object({
-  name: z.string().nonempty("This field is required"),
+  name: z.string().nonempty('This field is required'),
 });
 
 // User Profile's Form Schema
 const FormSchema = z.object({
-  profilePicture:  z.instanceof(File).optional(),
+  profilePicture: z.instanceof(File).optional(),
   name: z.string().nonempty('This field is required'),
   title: z.string().nonempty('This field is required'),
   about: z
@@ -86,22 +90,23 @@ const FormSchema = z.object({
   address: z.string().nonempty('This field is required'),
   enrollNo: z
     .string()
-    .transform((val) => val.toUpperCase())
-    .refine((val) => /^[A-Z]{2}[0-9]{4}$/.test(val), 'Invalid Enrollment number'),
+    .transform(val => val.toUpperCase())
+    .refine(val => /^[A-Z]{2}[0-9]{4}$/.test(val), 'Invalid Enrollment number'),
   facultyNo: z
     .string()
-    .transform((val) => val.toUpperCase())
-    .refine((val) => /^[0-9]{2}[A-Z]{5}[0-9]{3}$/.test(val), 'Invalid Faculty number'),
+    .transform(val => val.toUpperCase())
+    .refine(
+      val => /^[0-9]{2}[A-Z]{5}[0-9]{3}$/.test(val),
+      'Invalid Faculty number'
+    ),
   course: courseSchema,
-  semester: z
-    .string()
-    .nonempty('Semester is Required'),
+  semester: z.string().nonempty('Semester is Required'),
   progLangs: z.array(progLangSchema),
   skills: z.array(skillsSchema),
   projects: z.array(projectSchema),
   achievements: z.array(achievementSchema),
   email: z.string().email().nonempty('This field is required'),
-  phone: z.string().nonempty('This field is required'),
+  phone: z.string().refine(val => /^(\+?\d{1,3}[- ]?)?\d{10}$/.test(val),'Invalid phone number'),
   github: z.string().url(),
   linkedin: z.string().url(),
 });
@@ -109,7 +114,6 @@ const FormSchema = z.object({
 type FormData = z.infer<typeof FormSchema>;
 
 const StudentPortfolioForm = () => {
-
   const [preview, setPreview] = useState<string | null>(null);
 
   const form = useForm<FormData>({
@@ -185,54 +189,92 @@ const StudentPortfolioForm = () => {
               onSubmit={form.handleSubmit(onSubmit)}
               className="flex flex-col space-y-6 pb-12 mx-auto max-w-3xl"
             >
-                <div className="grid grid-cols-[3fr_3fr_3fr] max-[700px]:grid-cols-1 space-x-4 max-[700px]:space-x-0 max-[700px]:space-y-4">
+              <div className="grid grid-cols-[3fr_3fr_3fr] max-[700px]:grid-cols-1 space-x-4 max-[700px]:space-x-0 max-[700px]:space-y-4">
                 <FormField
                   control={form.control}
                   name="name"
                   render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                    <Input placeholder="Enter your name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter your name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
                 />
                 <FormField
                   control={form.control}
                   name="dob"
                   render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Date of Birth</FormLabel>
-                    <FormControl>
-                    <Input
-                      type="date"
-                      {...field}
-                    />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+                    <FormItem>
+                      <FormLabel>Date of Birth</FormLabel>
+                      <FormControl>
+                        <Input type="date" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
                 />
                 <FormField
+                  name="profilePicture"
                   control={form.control}
-                  name="enrollNo"
-                  render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Enrollment Number</FormLabel>
-                    <FormControl>
-                    <Input
-                      placeholder="Enter your enrollment number"
-                      {...field}
-                    />
-                    </FormControl>
-                  </FormItem>
+                  render={() => (
+                    <FormItem className="text-left w-full">
+                      <FormLabel>Upload Profile Picture</FormLabel>
+                      <FormControl>
+                        <div className="flex items-center space-x-4">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            id="image"
+                            className="hidden"
+                            onChange={e => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                form.setValue('profilePicture', file);
+                                setPreview(URL.createObjectURL(file));
+                              }
+                            }}
+                          />
+
+                          <label
+                            htmlFor="image"
+                            className="cursor-pointer flex items-center px-4 py-2 border rounded-lg shadow-sm transition"
+                          >
+                            <ImageIcon className="mr-2" size={18} />
+                            Choose File
+                          </label>
+
+                          {preview && (
+                            <div className="relative">
+                              <img
+                                src={preview}
+                                alt="Preview"
+                                className="h-12 w-12 rounded-lg border object-cover"
+                              />
+
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  form.setValue('profilePicture', undefined);
+                                  setPreview(null);
+                                }}
+                                className="absolute -top-2 -right-2 bg-red-500 text-white p-1 rounded-full shadow-md hover:bg-red-600 transition"
+                              >
+                                <Trash2 size={12} />
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
                 />
-                </div>
+              </div>
               <div className="grid grid-cols-[3fr_3fr_3fr] max-[700px]:grid-cols-1 space-x-4 max-[700px]:space-x-0 max-[700px]:space-y-4">
-              <FormField
+                <FormField
                   control={form.control}
                   name={`course`}
                   render={({ field }) => (
@@ -240,7 +282,7 @@ const StudentPortfolioForm = () => {
                       <FormLabel>Course</FormLabel>
                       <FormControl>
                         <Select
-                          onValueChange={field.onChange} // Handle selection manually
+                          onValueChange={field.onChange}
                           value={field.value}
                         >
                           <SelectTrigger>
@@ -250,9 +292,7 @@ const StudentPortfolioForm = () => {
                             <SelectItem value="B.Sc.(Hons.) Comp. Appls.">
                               B.Sc.(Hons.) Comp. Appls.
                             </SelectItem>
-                            <SelectItem value="MCA">
-                              MCA
-                            </SelectItem>
+                            <SelectItem value="MCA">MCA</SelectItem>
                             <SelectItem value="M.Sc. Cyber Security">
                               M.Sc. Cyber Security
                             </SelectItem>
@@ -278,6 +318,23 @@ const StudentPortfolioForm = () => {
                 />
                 <FormField
                   control={form.control}
+                  name="enrollNo"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Enrollment Number</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter your enrollment number"
+                          {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="grid grid-cols-[1fr_2fr] max-[700px]:grid-cols-1 space-x-4 max-[700px]:space-x-0 max-[700px]:space-y-4">
+                <FormField
+                  control={form.control}
                   name="facultyNo"
                   render={({ field }) => (
                     <FormItem>
@@ -291,8 +348,6 @@ const StudentPortfolioForm = () => {
                     </FormItem>
                   )}
                 />
-              </div>
-              <div className="grid grid-cols-[2fr_1fr] max-[700px]:grid-cols-1 space-x-4 max-[700px]:space-x-0 max-[700px]:space-y-4">
                 <FormField
                   control={form.control}
                   name="title"
@@ -306,60 +361,6 @@ const StudentPortfolioForm = () => {
                     </FormItem>
                   )}
                 />
-                <FormField
-              name="profilePicture"
-              control={form.control}
-              render={() => (
-                <FormItem className="text-left w-full">
-                  <FormLabel>Upload Profile Picture</FormLabel>
-                  <FormControl>
-                    <div className="flex items-center space-x-4">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        id="image"
-                        className="hidden"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            form.setValue("profilePicture", file);
-                            setPreview(URL.createObjectURL(file));
-                          }
-                        }}
-                      />
-
-                      <label
-                        htmlFor="image"
-                        className="cursor-pointer flex items-center px-4 py-2 border rounded-lg shadow-sm transition">
-                        <ImageIcon className="mr-2" size={18} />
-                        Choose File
-                      </label>
-
-                      {preview && (
-                        <div className="relative">
-                          <img
-                            src={preview}
-                            alt="Preview"
-                            className="h-12 w-12 rounded-lg border object-cover"
-                          />
-
-                          <button
-                            type="button"
-                            onClick={() => {
-                              form.setValue("profilePicture", undefined);
-                              setPreview(null);
-                            }}
-                            className="absolute -top-2 -right-2 bg-red-500 text-white p-1 rounded-full shadow-md hover:bg-red-600 transition">
-                            <Trash2 size={12} />
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
               </div>
               <div>
                 <FormField
@@ -380,17 +381,14 @@ const StudentPortfolioForm = () => {
                 />
               </div>
               <div>
-              <FormField
+                <FormField
                   control={form.control}
                   name="address"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Address</FormLabel>
                       <FormControl>
-                        <Textarea
-                          placeholder="Enter your address"
-                          {...field}
-                        />
+                        <Textarea placeholder="Enter your address" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -437,7 +435,8 @@ const StudentPortfolioForm = () => {
                               <FormItem>
                                 <FormControl>
                                   <Select
-                                    {...field}
+                                    value={field.value}
+                                    onValueChange={field.onChange}
                                   >
                                     <SelectTrigger>
                                       <SelectValue placeholder="Select fluency" />
@@ -509,10 +508,7 @@ const StudentPortfolioForm = () => {
                             render={({ field }) => (
                               <FormItem>
                                 <FormControl>
-                                  <Input
-                                    placeholder="Enter skill"
-                                    {...field}
-                                  />
+                                  <Input placeholder="Enter skill" {...field} />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -527,7 +523,8 @@ const StudentPortfolioForm = () => {
                               <FormItem>
                                 <FormControl>
                                   <Select
-                                    {...field}
+                                    value={field.value}
+                                    onValueChange={field.onChange}
                                   >
                                     <SelectTrigger>
                                       <SelectValue placeholder="Select fluency" />
@@ -581,7 +578,7 @@ const StudentPortfolioForm = () => {
                 <h3 className="text-lg font-medium">Projects</h3>
                 {projectFields.map((item, index) => (
                   <Card key={item.id} className="p-8 m-1 space-y-4">
-                    <div className='space-y-4'>
+                    <div className="space-y-4">
                       <div className="grid grid-cols-[2fr_1fr]">
                         <FormField
                           control={form.control}
@@ -590,37 +587,43 @@ const StudentPortfolioForm = () => {
                             <FormItem>
                               <FormLabel>Project Name</FormLabel>
                               <FormControl>
-                                <Input placeholder="Enter project name" {...field} />
+                                <Input
+                                  placeholder="Enter project name"
+                                  {...field}
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
                           )}
                         />
-                        <div className='flex justify-end items-center'>
+                        <div className="flex justify-end items-center">
                           <Button
-                              type="button"
-                              variant={'destructive'}
-                              onClick={() => removeProject(index)}
-                            >
-                              <Trash2 color="white" />
+                            type="button"
+                            variant={'destructive'}
+                            onClick={() => removeProject(index)}
+                          >
+                            <Trash2 color="white" />
                           </Button>
                         </div>
                       </div>
-                      <FormField 
+                      <FormField
                         control={form.control}
                         name={`projects.${index}.projectDescription`}
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Project Description</FormLabel>
                             <FormControl>
-                              <Textarea placeholder="Enter project description" {...field} />
+                              <Textarea
+                                placeholder="Enter project description"
+                                {...field}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
                     </div>
-                    <div className='grid grid-cols-[1fr_1fr_1fr] max-[700px]:grid-cols-1 space-x-4 max-[700px]:space-x-0 max-[700px]:space-y-4'>
+                    <div className="grid grid-cols-[1fr_1fr_1fr] max-[700px]:grid-cols-1 space-x-4 max-[700px]:space-x-0 max-[700px]:space-y-4">
                       <FormField
                         control={form.control}
                         name={`projects.${index}.technologiesUsed`}
@@ -628,7 +631,10 @@ const StudentPortfolioForm = () => {
                           <FormItem>
                             <FormLabel>Technologies Used</FormLabel>
                             <FormControl>
-                              <Input placeholder="Enter technologies used" {...field} />
+                              <Input
+                                placeholder="Enter technologies used"
+                                {...field}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -641,7 +647,10 @@ const StudentPortfolioForm = () => {
                           <FormItem>
                             <FormLabel>Project Link</FormLabel>
                             <FormControl>
-                              <Input placeholder="Enter project link" {...field} />
+                              <Input
+                                placeholder="Enter project link"
+                                {...field}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -654,7 +663,10 @@ const StudentPortfolioForm = () => {
                           <FormItem>
                             <FormLabel>Project Duration</FormLabel>
                             <FormControl>
-                              <Input placeholder="Enter project duration" {...field} />
+                              <Input
+                                placeholder="Enter project duration"
+                                {...field}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -668,7 +680,13 @@ const StudentPortfolioForm = () => {
                   variant={'secondary'}
                   className="mt-[32px]"
                   onClick={() =>
-                    appendProject({ projectName: '', projectDescription: '', technologiesUsed: '', projectLink: '', projectDuration: '' })
+                    appendProject({
+                      projectName: '',
+                      projectDescription: '',
+                      technologiesUsed: '',
+                      projectLink: '',
+                      projectDuration: '',
+                    })
                   }
                 >
                   Add Projects
@@ -677,95 +695,108 @@ const StudentPortfolioForm = () => {
               <div>
                 <h3 className="text-lg font-medium">Achievements</h3>
                 {achievementsFields.map((item, index) => (
-                    <div key={item.id} className="grid grid-cols-[3fr_1fr] items-center space-y-2">
+                  <div
+                    key={item.id}
+                    className="grid grid-cols-[3fr_1fr] items-center space-y-2"
+                  >
                     <FormField
                       control={form.control}
                       name={`achievements.${index}.name`}
                       render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                        <Input placeholder="Enter achievement" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
+                        <FormItem>
+                          <FormControl>
+                            <Input placeholder="Enter achievement" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
                       )}
                     />
                     <div className="flex justify-center">
                       <Button
-                      type="button"
-                      variant={'destructive'}
-                      onClick={() => removeAchievement(index)}
+                        type="button"
+                        variant={'destructive'}
+                        onClick={() => removeAchievement(index)}
                       >
-                      <Trash2 color="white" />
+                        <Trash2 color="white" />
                       </Button>
                     </div>
-                    </div>
-                  ))}
-                  <Button
-                    type="button"
-                    variant={'secondary'}
-                    className="mt-[32px]"
-                    onClick={() => appendAchievement({ name: '' })}
-                  >
-                    Add Achievement
-                  </Button>
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant={'secondary'}
+                  className="mt-[32px]"
+                  onClick={() => appendAchievement({ name: '' })}
+                >
+                  Add Achievement
+                </Button>
               </div>
-                  <div className="grid grid-cols-[2fr_2fr_2fr_2fr] max-[700px]:grid-cols-1 space-x-4 max-[700px]:space-x-0 max-[700px]:space-y-4">
-                      <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Email Address</FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="Enter your email"
-                                className=" w-full"
-                                {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )} />
-                      <FormField
-                        control={form.control}
-                        name="github"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>GitHub Profile</FormLabel>
-                            <FormControl>
-                              <Input placeholder="Enter GitHub Profile" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )} />
-                      <FormField
-                        control={form.control}
-                        name="linkedin"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>LinkedIn Profile</FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="Enter LinkedIn Profile"
-                                {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )} />
-                      <FormField
-                        control={form.control}
-                        name="phone"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Phone Number</FormLabel>
-                            <FormControl>
-                              <Input type="tel" placeholder="Enter Phone number" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )} />
-                    </div>
-                    <Button type="submit">Submit</Button>
+              <div className="grid grid-cols-[2fr_2fr_2fr_2fr] max-[700px]:grid-cols-1 space-x-4 max-[700px]:space-x-0 max-[700px]:space-y-4">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email Address</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter your email"
+                          className=" w-full"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="github"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>GitHub Profile</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter GitHub Profile" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="linkedin"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>LinkedIn Profile</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter LinkedIn Profile"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone Number</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="tel"
+                          placeholder="Enter Phone number"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <Button type="submit">Submit</Button>
             </form>
           </Form>
         </Card>
