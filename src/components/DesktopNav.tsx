@@ -13,6 +13,7 @@ const DesktopNav = () => {
     { icon: Bell, label: "Notices", path: "/notices" },
     { icon: MessageCircle, label: "Chat", path: "/chat" },
     { icon: Settings, label: "Settings", path: "/settings" },
+    
   ];
 
   return (

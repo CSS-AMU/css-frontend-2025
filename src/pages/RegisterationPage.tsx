@@ -1,3 +1,4 @@
+import axios from "axios"
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -15,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 
 const formSchema = z.object({
-	enrollNo: z
+	email: z
         .string()
         .transform(val => val.toUpperCase())
         .refine(val => /^[A-Z]{2}[0-9]{4}$/.test(val), 'Invalid Enrollment number'),
@@ -31,15 +32,27 @@ const RegistrationPage = () => {
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			enrollNo: '',
+			email: '',
 			password: '',
 		}
 	})
 
 	const onSubmit = async (data: FormValues) => {
-		console.log(data);
+	
+		try {
+			const response = await axios.post("http://localhost:3000/api/v1/users/register",data)
+			console.log(response.data);
+			alert("Registration successful");
+			navigate("/login");
+		} catch (error) {
+			alert("user already exists or something went wrong" );
+			console.error("Error registering:", error);
+		}
+		
+		
 	}
 
+	
 
 	return (
 		<div className="min-h-screen pt-20 pb-20 md:pb-0 px-4">
@@ -50,7 +63,7 @@ const RegistrationPage = () => {
                     <p className="text-xs text-center">Please enter your details to register yourself.</p>
 					<FormField
 						control={form.control}
-						name="enrollNo"
+						name="email"
 						render={({ field }) => (
 						<FormItem className="text-left w-full">
                             <FormLabel className="m-2">Enrollment Number</FormLabel>
