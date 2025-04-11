@@ -40,7 +40,7 @@ const RegistrationPage = () => {
 	const onSubmit = async (data: FormValues) => {
 	
 		try {
-			const response = await axios.post("http://localhost:3000/api/v1/users/register",data)
+			const response = await axios.post("https://f911-2401-4900-86a3-a646-1031-8a37-c3b1-e6a5.ngrok-free.app/api/v1/users/register",data)
 			console.log(response.data);
 			alert("Registration successful");
 			navigate("/login");
